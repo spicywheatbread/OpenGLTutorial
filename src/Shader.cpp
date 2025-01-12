@@ -1,9 +1,10 @@
-#include "Shader.h"
+#include "Shader.hpp"
 
 // Reads a text file and outputs a string with everything in the text file
-std::string get_file_contents(const char* filename)
+std::string get_file_contents(const GLchar* filename)
 {
-    std::ifstream in(filename, std::ios::binary);
+    std::ifstream in;
+    in.open(filename);
     if (in)
     {
         std::string contents;
@@ -25,8 +26,8 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
     std::string fragmentCode = get_file_contents(fragmentFile);
 
     // Convert the shader source strings into character arrays
-    const char* vertexSource = vertexCode.c_str();
-    const char* fragmentSource = fragmentCode.c_str();
+    const GLchar* vertexSource = vertexCode.c_str();
+    const GLchar* fragmentSource = fragmentCode.c_str();
 
     // Create Vertex Shader Object and get its reference
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
