@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		045513A02D365FFC000DDB23 /* default.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 045513942D365F7A000DDB23 /* default.frag */; };
+		045513A12D365FFC000DDB23 /* default.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 045513952D365F7A000DDB23 /* default.vert */; };
+		045513A22D365FFC000DDB23 /* brick.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 045513972D365F7A000DDB23 /* brick.jpg */; };
+		045513A32D365FFC000DDB23 /* container.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 045513982D365F7A000DDB23 /* container.jpg */; };
+		045513A52D366215000DDB23 /* awesomeface.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 045513A42D366210000DDB23 /* awesomeface.png */; };
 		045BB5CD2D2E5E1900807F95 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 045BB5CC2D2E5E1900807F95 /* OpenGL.framework */; };
 		045BB5CF2D2E5E8D00807F95 /* libGLEW.2.2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 045BB5CE2D2E5E8D00807F95 /* libGLEW.2.2.0.dylib */; };
 		045BB5D12D2E5EA900807F95 /* libglfw.3.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 045BB5D02D2E5EA900807F95 /* libglfw.3.4.dylib */; };
@@ -15,34 +20,41 @@
 		04A8DF402D33909900E4B1A8 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04A8DF372D33909900E4B1A8 /* Shader.cpp */; };
 		04A8DF412D33909900E4B1A8 /* VAO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04A8DF392D33909900E4B1A8 /* VAO.cpp */; };
 		04A8DF422D33909900E4B1A8 /* VBO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04A8DF3B2D33909900E4B1A8 /* VBO.cpp */; };
-		04A8DF462D339A8600E4B1A8 /* default.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04A8DF452D33951400E4B1A8 /* default.frag */; };
-		04A8DF472D339A8600E4B1A8 /* default.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04A8DF442D33951400E4B1A8 /* default.vert */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		045BB5BF2D2E5D9100807F95 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		04A8DF0F2D338BC100E4B1A8 /* CopyFiles */ = {
+		0455139F2D365FF1000DDB23 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				04A8DF462D339A8600E4B1A8 /* default.frag in CopyFiles */,
-				04A8DF472D339A8600E4B1A8 /* default.vert in CopyFiles */,
+				045513A52D366215000DDB23 /* awesomeface.png in CopyFiles */,
+				045513A02D365FFC000DDB23 /* default.frag in CopyFiles */,
+				045513A12D365FFC000DDB23 /* default.vert in CopyFiles */,
+				045513A22D365FFC000DDB23 /* brick.jpg in CopyFiles */,
+				045513A32D365FFC000DDB23 /* container.jpg in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
+		};
+		045BB5BF2D2E5D9100807F95 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0455137B2D364DDA000DDB23 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		045513942D365F7A000DDB23 /* default.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = default.frag; sourceTree = "<group>"; };
+		045513952D365F7A000DDB23 /* default.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = default.vert; sourceTree = "<group>"; };
+		045513972D365F7A000DDB23 /* brick.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = brick.jpg; sourceTree = "<group>"; };
+		045513982D365F7A000DDB23 /* container.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = container.jpg; sourceTree = "<group>"; };
+		045513A42D366210000DDB23 /* awesomeface.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = awesomeface.png; sourceTree = "<group>"; };
 		045BB5C12D2E5D9100807F95 /* OpenGL_Tutorial */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = OpenGL_Tutorial; sourceTree = BUILT_PRODUCTS_DIR; };
 		045BB5CC2D2E5E1900807F95 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		045BB5CE2D2E5E8D00807F95 /* libGLEW.2.2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.2.0.dylib; path = ../../../../../usr/local/Cellar/glew/2.2.0_1/lib/libGLEW.2.2.0.dylib; sourceTree = "<group>"; };
@@ -56,8 +68,6 @@
 		04A8DF3B2D33909900E4B1A8 /* VBO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VBO.cpp; sourceTree = "<group>"; };
 		04A8DF3C2D33909900E4B1A8 /* VBO.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VBO.hpp; sourceTree = "<group>"; };
 		04A8DF432D33940100E4B1A8 /* Shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Shader.hpp; sourceTree = "<group>"; };
-		04A8DF442D33951400E4B1A8 /* default.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = default.vert; sourceTree = "<group>"; };
-		04A8DF452D33951400E4B1A8 /* default.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = default.frag; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,10 +84,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		045513962D365F7A000DDB23 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				045513942D365F7A000DDB23 /* default.frag */,
+				045513952D365F7A000DDB23 /* default.vert */,
+			);
+			path = shaders;
+			sourceTree = "<group>";
+		};
+		045513992D365F7A000DDB23 /* textures */ = {
+			isa = PBXGroup;
+			children = (
+				045513A42D366210000DDB23 /* awesomeface.png */,
+				045513972D365F7A000DDB23 /* brick.jpg */,
+				045513982D365F7A000DDB23 /* container.jpg */,
+			);
+			path = textures;
+			sourceTree = "<group>";
+		};
+		0455139A2D365F7A000DDB23 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				045513962D365F7A000DDB23 /* shaders */,
+				045513992D365F7A000DDB23 /* textures */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
 		045BB5B82D2E5D9100807F95 = {
 			isa = PBXGroup;
 			children = (
-				04A8DF332D33909900E4B1A8 /* resources */,
+				0455139A2D365F7A000DDB23 /* resources */,
 				04A8DF3D2D33909900E4B1A8 /* src */,
 				045BB5C22D2E5D9100807F95 /* Products */,
 				045BB5CB2D2E5E1900807F95 /* Frameworks */,
@@ -102,34 +140,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		04A8DF322D33909900E4B1A8 /* shaders */ = {
-			isa = PBXGroup;
-			children = (
-				04A8DF452D33951400E4B1A8 /* default.frag */,
-				04A8DF442D33951400E4B1A8 /* default.vert */,
-			);
-			path = shaders;
-			sourceTree = "<group>";
-		};
-		04A8DF332D33909900E4B1A8 /* resources */ = {
-			isa = PBXGroup;
-			children = (
-				04A8DF322D33909900E4B1A8 /* shaders */,
-			);
-			path = resources;
-			sourceTree = "<group>";
-		};
 		04A8DF3D2D33909900E4B1A8 /* src */ = {
 			isa = PBXGroup;
 			children = (
 				04A8DF342D33909900E4B1A8 /* EBO.cpp */,
-				04A8DF352D33909900E4B1A8 /* EBO.hpp */,
 				04A8DF362D33909900E4B1A8 /* main.cpp */,
 				04A8DF372D33909900E4B1A8 /* Shader.cpp */,
-				04A8DF432D33940100E4B1A8 /* Shader.hpp */,
 				04A8DF392D33909900E4B1A8 /* VAO.cpp */,
-				04A8DF3A2D33909900E4B1A8 /* VAO.hpp */,
 				04A8DF3B2D33909900E4B1A8 /* VBO.cpp */,
+				0455137B2D364DDA000DDB23 /* stb_image.h */,
+				04A8DF352D33909900E4B1A8 /* EBO.hpp */,
+				04A8DF432D33940100E4B1A8 /* Shader.hpp */,
+				04A8DF3A2D33909900E4B1A8 /* VAO.hpp */,
 				04A8DF3C2D33909900E4B1A8 /* VBO.hpp */,
 			);
 			path = src;
@@ -145,7 +167,7 @@
 				045BB5BD2D2E5D9100807F95 /* Sources */,
 				045BB5BE2D2E5D9100807F95 /* Frameworks */,
 				045BB5BF2D2E5D9100807F95 /* CopyFiles */,
-				04A8DF0F2D338BC100E4B1A8 /* CopyFiles */,
+				0455139F2D365FF1000DDB23 /* CopyFiles */,
 			);
 			buildRules = (
 			);
