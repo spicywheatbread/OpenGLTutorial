@@ -10,6 +10,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <string>
 
 std::string get_file_contents(const char* filename);
 
