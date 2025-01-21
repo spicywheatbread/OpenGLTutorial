@@ -13,5 +13,5 @@ uniform Light light;
 
 void main()
 {
-    FragColor = vec4(light.diffuse, 1.0f); 
+    FragColor = vec4(1.0f); 
 }
