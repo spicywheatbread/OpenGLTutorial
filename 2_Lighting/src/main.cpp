@@ -70,8 +70,8 @@ int main() {
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
     
-    lastX = screenWidth;
-    lastY = screenHeight;
+    lastX = WIDTH;
+    lastY = HEIGHT;
     
     // Initialize GLEW
     glewExperimental = GL_TRUE;
@@ -136,6 +136,20 @@ int main() {
         -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
     };
+    
+    glm::vec3 cubePositions[] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+    
     int strideLength = 8;
 
     glm::vec3 lightPosition = glm::vec3(1.2f, 0.0f, 2.0f);
@@ -208,6 +222,7 @@ int main() {
     // --------------------- Render Loop --------------------- //
     while(!glfwWindowShouldClose(window))
     {
+        // Calculate delta time so that device frame rate doesn't affect the controls
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -218,20 +233,15 @@ int main() {
         lightPosition.x = sin(currentFrame) * 3;
         lightPosition.z = cos(currentFrame) * 3;
         
-        glm::vec3 diffuseColor = glm::vec3(0.5f);
-        glm::vec3 ambientColor = glm::vec3(0.2f);
-        
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         // --------------------- Cameras --------------------- //
-        glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
         
         lightingShader.Activate();
         
         // Vertex Shader Uniforms
-        lightingShader.setMat4("model", model);
         lightingShader.setMat4("view", view);
         lightingShader.setMat4("projection", projection);
         
@@ -240,13 +250,20 @@ int main() {
         lightingShader.setInt("material.specular", 1);
         lightingShader.setFloat("material.shininess", 32.0f);
         
-        lightingShader.setVec3("light.ambient",  ambientColor);
-        lightingShader.setVec3("light.diffuse",  diffuseColor); // darken diffuse light a bit
+        lightingShader.setVec3("light.position", camera.Position);
+        lightingShader.setVec3("light.direction", camera.Front);
+        lightingShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+        lightingShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+        
+        lightingShader.setVec3("light.ambient",  glm::vec3(0.2f, 0.2f, 0.2f));
+        lightingShader.setVec3("light.diffuse",  glm::vec3(0.5f, 0.5f, 0.5f)); // darken diffuse light a bit
         lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-        lightingShader.setVec3("light.position", view * model * glm::vec4(lightPosition, 1.0f));
+
+        lightingShader.setFloat("light.constant",  1.0f);
+        lightingShader.setFloat("light.linear",    0.09f);
+        lightingShader.setFloat("light.quadratic", 0.032f);
         
-        lightingShader.setFloat("time", glfwGetTime());
-        
+        // Activate and bind our respective textures
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, diffuseMap);
         
@@ -255,8 +272,19 @@ int main() {
         
         // Draw the triangle using the GL_TRIANGLES primitive
         VAO1.Bind();
-        glDrawArrays(GL_TRIANGLES, 0, 36);
         
+        for(unsigned int i = 0; i < 10; i++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            float angle = 20.0f * i;
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            lightingShader.setMat4("model", model);
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+        
+        // Draw our lighting cube
         glm::mat4 lightModel = glm::mat4(1.0f);
         lightModel = glm::translate(lightModel, lightPosition);
         lightModel = glm::scale(lightModel, glm::vec3(0.5f));
@@ -267,12 +295,12 @@ int main() {
         lightCubeShader.setMat4("view", view);
         lightCubeShader.setMat4("projection", projection);
         
+        // Fragment shader Uniforms
         lightCubeShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
         lightCubeShader.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
 
-
-        
         VAO_Light.Bind();
+        
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
         glfwSwapBuffers(window);

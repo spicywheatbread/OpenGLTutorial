@@ -15,8 +15,10 @@ void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0);
     FragPos = vec3(view * model * vec4(aPos, 1.0));
+    TexCoords = aTexCoords;
+
     // Calculate the normal matrix so that non-uniform scaling doesn't mess up our normal
     mat3 normalMatrix = mat3(transpose(inverse(view * model))); // Inversing matrices is expensive for shaders, typically do on CPU.
     Normal = normalMatrix * aNormal;
-    TexCoords = aTexCoords;
+    
 }
