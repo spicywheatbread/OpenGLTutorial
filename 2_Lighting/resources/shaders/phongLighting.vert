@@ -19,6 +19,6 @@ void main()
 
     // Calculate the normal matrix so that non-uniform scaling doesn't mess up our normal
     mat3 normalMatrix = mat3(transpose(inverse(view * model))); // Inversing matrices is expensive for shaders, typically do on CPU.
-    Normal = normalMatrix * aNormal;
+    Normal = normalize(normalMatrix * aNormal);
     
 }
