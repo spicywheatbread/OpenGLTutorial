@@ -12,9 +12,6 @@
 #include "stb_image.h"
 
 // Wrapper classes
-#include "EBO.hpp"
-#include "VAO.hpp"
-#include "VBO.hpp"
 #include "Shader.hpp"
 #include "Camera.hpp"
 
@@ -170,6 +167,7 @@ int main() {
          EBO (ELEMENT BUFFER OBJECT) - holds the indices of the vertices we want to access
      */
     
+    // Removed the wrapper classes b/c I didn't want to abstract the stuff away
     unsigned int VAO1, VAO_LIGHT, VBO1;
     glGenVertexArrays(1, &VAO1);
     glBindVertexArray(VAO1);
@@ -190,7 +188,7 @@ int main() {
     glBindVertexArray(VAO_LIGHT);
     
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, strideLength * sizeof(float), (void*)0);
-    
+    glEnableVertexAttribArray(0);
     
     // --------------------- Textures --------------------- //
     unsigned int diffuseMap;
