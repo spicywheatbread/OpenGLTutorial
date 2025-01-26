@@ -1,8 +1,7 @@
-#ifndef Mesh_hpp
-#define Mesh_hpp
+#ifndef MESH_HPP
+#define MESH_HPP
 
 #include <stdio.h>
-#include <string>
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -19,6 +18,7 @@ struct Vertex {
 struct Texture {
     unsigned int id;
     string type;
+    string path;  // we store the path of the texture to compare with other textures
 };
 
 class Mesh {
