@@ -79,15 +79,16 @@ int main() {
         
         return -1;
     }
-    stbi_set_flip_vertically_on_load(true); 
+    stbi_set_flip_vertically_on_load(true);
     
-    glEnable(GL_DEPTH_TEST);
     glClearColor(0.91f, 0.949f, 0.894f, 1.0f);
 
     glViewport(0, 0, screenWidth, screenHeight);
     
     // Shader Compilation
     Shader lightingShader("phongLighting.vert", "phongLighting.frag");
+    Shader outlineShader("phongLighting.vert", "shaderSingleColor.frag");
+
     float cubeVertices[] = {
         // positions          // texture Coords
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -132,6 +133,7 @@ int main() {
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
+    
     float planeVertices[] = {
         // positions          // texture Coords (note we set these higher than 1 (together with GL_REPEAT as texture wrapping mode). this will cause the floor texture to repeat)
          5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
@@ -142,6 +144,7 @@ int main() {
         -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
          5.0f, -0.5f, -5.0f,  2.0f, 2.0f
     };
+    
     // cube VAO
     unsigned int cubeVAO, cubeVBO;
     glGenVertexArrays(1, &cubeVAO);
@@ -171,6 +174,9 @@ int main() {
     unsigned int cubeTexture  = loadTexture("marble.jpg");
     unsigned int floorTexture = loadTexture("metal.png");
     
+    glEnable(GL_STENCIL_TEST);
+    glEnable(GL_DEPTH_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     // --------------------- Render Loop --------------------- //
     while(!glfwWindowShouldClose(window))
     {
@@ -181,41 +187,76 @@ int main() {
         
         processInput(window);
         
-        
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         
         // --------------------- Cameras --------------------- //
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
         glm::mat4 model = glm::mat4(1.0f);
         
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));    // it's a bit too big for our scene, so scale it down
+        outlineShader.Activate();
+        outlineShader.setMat4("view", view);
+        outlineShader.setMat4("projection", projection);
         
         lightingShader.Activate();
         lightingShader.setMat4("view", view);
         lightingShader.setMat4("projection", projection);
         
-        // cubes
+        // FLOOR //
+        glStencilMask(0x00); // Stencil mask lets us enable/disable writing to the stencil buffer, don't write to stencil for floor
+
+        glBindVertexArray(planeVAO);
+        glBindTexture(GL_TEXTURE_2D, floorTexture);
+        
+        lightingShader.setMat4("model", glm::mat4(1.0f));
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        
+        // CUBE 1 //
+        glStencilFunc(GL_ALWAYS, 1, 0xFF); // All fragments we check should pass
+        glStencilMask(0xFF); // enable writing to stecnil buff
+        
         glBindVertexArray(cubeVAO);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, cubeTexture);
-        model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-        lightingShader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(-1.0f, 1.0f, -1.0f));
+        lightingShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+                
+        // CUBE 2 //
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(2.0f, 1.0f, 0.0f));
         lightingShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
-        // floor
-        glBindVertexArray(planeVAO);
-        glBindTexture(GL_TEXTURE_2D, floorTexture);
-        lightingShader.setMat4("model", glm::mat4(1.0f));
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        glBindVertexArray(0);
-        glfwSwapBuffers(window);
+        // OUTLINE 1 //
+        /* this fragment passes if the stencil buff value is 0, as in we're in a fragment
+         that wasn't previously written by our cube. */
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
         
+        outlineShader.Activate();
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-1.0f, 1.0f, -1.0f));
+        model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
+        outlineShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        
+
+        // OUTLINE 2 //
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(2.0f, 1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
+        outlineShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        
+        glStencilMask(0xFF); 
+        // I'm not quite sure why we need to do this, but the program doesn't work otherwise.
+        // I think it was explained that: we want to reenable writing to the stencil, we want to replace all values with 0, and then reenable depth testing.
+        // Maybe for fragments where I didn't explicitly draw one of my models, stencil testing still happens, and we want it to be 0 for all those vlaues.
+        glStencilFunc(GL_ALWAYS, 0, 0xFF);
+        
+        glfwSwapBuffers(window);
         glfwPollEvents();
     }
     // --------------------- Clean up --------------------- //
