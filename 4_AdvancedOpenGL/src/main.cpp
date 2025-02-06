@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 
 // GLEW
 #define GLEW_STATIC
@@ -73,7 +74,7 @@ int main() {
     
     // Initialize GLEW
     glewExperimental = GL_TRUE;
-    if(GLEW_OK != glewInit()) 
+    if(GLEW_OK != glewInit())
     {
         std::cout << "Failed to initialize GLEW" << std::endl;
         
@@ -82,68 +83,106 @@ int main() {
     stbi_set_flip_vertically_on_load(true);
     
     glClearColor(0.91f, 0.949f, 0.894f, 1.0f);
-
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0, 0, screenWidth, screenHeight);
     
     // Shader Compilation
     Shader lightingShader("phongLighting.vert", "phongLighting.frag");
     Shader outlineShader("phongLighting.vert", "shaderSingleColor.frag");
-
+    
     float cubeVertices[] = {
         // positions          // texture Coords
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
+        
         -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
         -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
         -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
+        
         -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
         -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
         -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
         -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
+        
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        
         -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
+        
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
     
     float planeVertices[] = {
         // positions          // texture Coords (note we set these higher than 1 (together with GL_REPEAT as texture wrapping mode). this will cause the floor texture to repeat)
-         5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
+        5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
         -5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
         -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
-
-         5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
+        
+        5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
         -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
-         5.0f, -0.5f, -5.0f,  2.0f, 2.0f
+        5.0f, -0.5f, -5.0f,  2.0f, 2.0f
     };
+    float transparentVertices[] = {
+        // positions
+        0.0f,  0.5f,  0.0f,  0.0f,  1.0f,
+        0.0f, -0.5f,  0.0f,  0.0f,  0.0f,
+        1.0f, -0.5f,  0.0f,  1.0f,  0.0f,
+
+        0.0f,  0.5f,  0.0f,  0.0f,  1.0f,
+        1.0f, -0.5f,  0.0f,  1.0f,  0.0f,
+        1.0f,  0.5f,  0.0f,  1.0f,  1.0f
+    };
+    
+    glm::vec3 windows[] = {
+        glm::vec3(-1.5f,  0.0f, -0.48f),
+        glm::vec3( 1.5f,  0.0f,  0.51f),
+        glm::vec3( 0.0f,  0.0f,  0.7f),
+        glm::vec3(-0.3f,  0.0f, -2.3f),
+        glm::vec3( 0.5f,  0.0f, -0.6f)
+    };
+    
+    std::map<float, glm::vec3> sorted;
+    for (unsigned int i = 0; i < sizeof(windows) / sizeof(windows[0]); i++)
+    {
+        float distance = glm::length(camera.Position - windows[i]);
+        sorted[distance] = windows[i];
+    }
+    
+    // grass VAO
+    unsigned int grassVAO, grassVBO;
+    glGenVertexArrays(1, &grassVAO);
+    glGenBuffers(1, &grassVBO);
+    glBindVertexArray(grassVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), &transparentVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT), (void*)(3 * sizeof(GL_FLOAT)));
     
     // cube VAO
     unsigned int cubeVAO, cubeVBO;
@@ -173,11 +212,13 @@ int main() {
     
     unsigned int cubeTexture  = loadTexture("marble.jpg");
     unsigned int floorTexture = loadTexture("metal.png");
+    unsigned int grassTexture = loadTexture("grass.png");
+    unsigned int windowTexture = loadTexture("window.png");
     
-    glEnable(GL_STENCIL_TEST);
+    lightingShader.setInt("texture1", 0);
+    
     glEnable(GL_DEPTH_TEST);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-    // --------------------- Render Loop --------------------- //
     while(!glfwWindowShouldClose(window))
     {
         // Calculate delta time so that device frame rate doesn't affect the controls
@@ -187,7 +228,7 @@ int main() {
         
         processInput(window);
         
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         // --------------------- Cameras --------------------- //
         glm::mat4 view = camera.GetViewMatrix();
@@ -203,8 +244,6 @@ int main() {
         lightingShader.setMat4("projection", projection);
         
         // FLOOR //
-        glStencilMask(0x00); // Stencil mask lets us enable/disable writing to the stencil buffer, don't write to stencil for floor
-
         glBindVertexArray(planeVAO);
         glBindTexture(GL_TEXTURE_2D, floorTexture);
         
@@ -212,13 +251,9 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, 6);
         
         // CUBE 1 //
-        glStencilFunc(GL_ALWAYS, 1, 0xFF); // All fragments we check should pass
-        glStencilMask(0xFF); // enable writing to stecnil buff
-        
         glBindVertexArray(cubeVAO);
-        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, cubeTexture);
-        
+
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-1.0f, 1.0f, -1.0f));
         lightingShader.setMat4("model", model);
@@ -230,31 +265,24 @@ int main() {
         lightingShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
-        // OUTLINE 1 //
-        /* this fragment passes if the stencil buff value is 0, as in we're in a fragment
-         that wasn't previously written by our cube. */
-        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-        
-        outlineShader.Activate();
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-1.0f, 1.0f, -1.0f));
-        model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
-        outlineShader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        
+        // Vegetation
+        glBindVertexArray(grassVAO);
+        glBindTexture(GL_TEXTURE_2D, windowTexture);
 
-        // OUTLINE 2 //
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(2.0f, 1.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
-        outlineShader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        
-        glStencilMask(0xFF); 
-        // I'm not quite sure why we need to do this, but the program doesn't work otherwise.
-        // I think it was explained that: we want to reenable writing to the stencil, we want to replace all values with 0, and then reenable depth testing.
-        // Maybe for fragments where I didn't explicitly draw one of my models, stencil testing still happens, and we want it to be 0 for all those vlaues.
-        glStencilFunc(GL_ALWAYS, 0, 0xFF);
+        for(std::map<float,glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, it->second);
+            lightingShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+        /*
+        for(glm::vec3 pos : vegetation) {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, pos);
+            lightingShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+         */
         
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -1,0 +1,3 @@
+/Users/johan/Documents/Projects/OpenGL/1_GettingStarted/build/CMakeFiles/1_GettingStarted.dir
+/Users/johan/Documents/Projects/OpenGL/1_GettingStarted/build/CMakeFiles/edit_cache.dir
+/Users/johan/Documents/Projects/OpenGL/1_GettingStarted/build/CMakeFiles/rebuild_cache.dir
