@@ -1,5 +1,2 @@
 OpenGL_Tutorial.xcodeproj
-CMakeLists.txt
-**/lib
-**/include
 **/build
