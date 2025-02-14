@@ -1,2 +1,7 @@
 OpenGL_Tutorial.xcodeproj
 **/build
+**/CMakeFiles
+Makefile
+CMakeCache.txt
+.cache/
+*.cmake
