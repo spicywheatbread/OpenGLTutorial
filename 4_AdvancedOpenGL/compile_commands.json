@@ -1,0 +1,26 @@
+[
+{
+  "directory": "/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib -isystem /usr/local/include -O3 -DNDEBUG -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk -mmacosx-version-min=14.4 -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/System/Library/Frameworks  -o CMakeFiles/4_AdvancedOpenGL.dir/src/main.cpp.o -c /Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/src/main.cpp",
+  "file": "/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/src/main.cpp",
+  "output": "CMakeFiles/4_AdvancedOpenGL.dir/src/main.cpp.o"
+},
+{
+  "directory": "/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib -isystem /usr/local/include -O3 -DNDEBUG -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk -mmacosx-version-min=14.4 -o CMakeFiles/mylib.dir/Mesh.cpp.o -c /Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib/Mesh.cpp",
+  "file": "/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib/Mesh.cpp",
+  "output": "lib/CMakeFiles/mylib.dir/Mesh.cpp.o"
+},
+{
+  "directory": "/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib -isystem /usr/local/include -O3 -DNDEBUG -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk -mmacosx-version-min=14.4 -o CMakeFiles/mylib.dir/Model.cpp.o -c /Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib/Model.cpp",
+  "file": "/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib/Model.cpp",
+  "output": "lib/CMakeFiles/mylib.dir/Model.cpp.o"
+},
+{
+  "directory": "/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib -isystem /usr/local/include -O3 -DNDEBUG -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk -mmacosx-version-min=14.4 -o CMakeFiles/mylib.dir/Shader.cpp.o -c /Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib/Shader.cpp",
+  "file": "/Users/johan/Documents/Projects/OpenGL/4_AdvancedOpenGL/lib/Shader.cpp",
+  "output": "lib/CMakeFiles/mylib.dir/Shader.cpp.o"
+}
+]

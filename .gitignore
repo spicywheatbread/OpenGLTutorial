@@ -5,3 +5,5 @@ Makefile
 CMakeCache.txt
 .cache/
 *.cmake
+**/debug
+**/release
