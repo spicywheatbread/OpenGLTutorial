@@ -81,15 +81,13 @@ int main() {
   stbi_set_flip_vertically_on_load(true);
 
   glClearColor(0.91f, 0.949f, 0.894f, 1.0f);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glViewport(0, 0, screenWidth, screenHeight);
 
   // Shader Compilation
-  Shader lightingShader("resources/shaders/lightingShader.vert",
-                        "resources/shaders/lightingShader.frag");
-  Shader screenQuadShader("resources/shaders/framebuffer.vert",
-                          "resources/shaders/framebuffer.frag");
+  Shader lightingShader("../resources/shaders/lightingShader.vert",
+                        "../resources/shaders/lightingShader.frag");
+  Shader screenQuadShader("../resources/shaders/framebuffer.vert",
+                          "../resources/shaders/framebuffer.frag");
 
   /*
       Remember: to specify vertices in a counter-clockwise winding order you
@@ -157,46 +155,14 @@ int main() {
 
       5.0f, -0.5f, 5.0f,  2.0f,  0.0f,  -5.0f, -0.5f, -5.0f,
       0.0f, 2.0f,  5.0f,  -0.5f, -5.0f, 2.0f,  2.0f};
-  float transparentVertices[] = {
-      // positions
-      0.0f, 0.5f, 0.0f, 0.0f,  1.0f, 0.0f, -0.5f, 0.0f,
-      0.0f, 0.0f, 1.0f, -0.5f, 0.0f, 1.0f, 0.0f,
-
-      0.0f, 0.5f, 0.0f, 0.0f,  1.0f, 1.0f, -0.5f, 0.0f,
-      1.0f, 0.0f, 1.0f, 0.5f,  0.0f, 1.0f, 1.0f};
-
-  glm::vec3 windows[] = {
-      glm::vec3(-1.5f, 0.0f, -0.48f), glm::vec3(1.5f, 0.0f, 0.51f),
-      glm::vec3(0.0f, 0.0f, 0.7f), glm::vec3(-0.3f, 0.0f, -2.3f),
-      glm::vec3(0.5f, 0.0f, -0.6f)};
 
   float quadVertices[] = {// positions   // texCoords
-                          -1.0f, 1.0f, 0.0f, 1.0f,  -1.0f, -1.0f,
-                          0.0f,  0.0f, 1.0f, -1.0f, 1.0f,  0.0f,
-
-                          -1.0f, 1.0f, 0.0f, 1.0f,  1.0f,  -1.0f,
-                          1.0f,  0.0f, 1.0f, 1.0f,  1.0f,  1.0f};
-
-  std::map<float, glm::vec3> sorted;
-  for (unsigned int i = 0; i < sizeof(windows) / sizeof(windows[0]); i++) {
-    float distance = glm::length(camera.Position - windows[i]);
-    sorted[distance] = windows[i];
-  }
-
-  // grass VAO
-  unsigned int grassVAO, grassVBO;
-  glGenVertexArrays(1, &grassVAO);
-  glGenBuffers(1, &grassVBO);
-  glBindVertexArray(grassVAO);
-  glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices),
-               &transparentVertices, GL_STATIC_DRAW);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT),
-                        (void *)0);
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT),
-                        (void *)(3 * sizeof(GL_FLOAT)));
+  -1.0f, 1.0f, 0.0f, 1.0f,
+  -1.0f, 0.0f, 0.0f,  0.0f,
+  0.0f, 0.0f, 1.0f,  0.0f,
+  -1.0f, 1.0f, 0.0f, 1.0f,
+  0.0f,  0.0f, 1.0f,  0.0f,
+   0.0f, 1.0f, 1.0f,  1.0f};
 
   // cube VAO
   unsigned int cubeVAO, cubeVBO;
@@ -228,6 +194,20 @@ int main() {
                         (void *)(3 * sizeof(float)));
   glBindVertexArray(0);
 
+  // screen quad VAO
+  unsigned int quadVAO, quadVBO;
+  glGenVertexArrays(1, &quadVAO);
+  glGenBuffers(1, &quadVBO);
+  glBindVertexArray(quadVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices,
+               GL_STATIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
+                        (void *)(2 * sizeof(float)));
+
   unsigned int FBO;
   glGenFramebuffers(1, &FBO);
   glBindFramebuffer(GL_FRAMEBUFFER, FBO);
@@ -255,29 +235,14 @@ int main() {
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
                             GL_RENDERBUFFER,
                             RBO); // Attach renderbuffer to framebuffer
-
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!"
               << std::endl;
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-  // Screen VAO
-  unsigned int screenQuadVAO, screenQuadVBO;
-  glGenVertexArrays(1, &screenQuadVAO);
-  glGenBuffers(1, &screenQuadVBO);
-  glBindVertexArray(screenQuadVAO);
-  glBindBuffer(GL_ARRAY_BUFFER, screenQuadVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices,
-               GL_STATIC_DRAW);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GL_FLOAT),
-                        (void *)0);
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GL_FLOAT),
-                        (void *)(2 * GL_FLOAT));
-
-  unsigned int cubeTexture = loadTexture("resources/textures/container.jpg");
-  unsigned int floorTexture = loadTexture("resources/textures/metal.png");
+  unsigned int cubeTexture = loadTexture("../resources/textures/container.jpg");
+  unsigned int floorTexture = loadTexture("../resources/textures/metal.png");
 
   lightingShader.Activate();
   lightingShader.setInt("texture1", 0);
@@ -285,10 +250,8 @@ int main() {
   screenQuadShader.setInt("screenTexture", 0);
 
   glEnable(GL_DEPTH_TEST);
-  glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
   while (!glfwWindowShouldClose(window)) {
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     // Calculate delta time so that device frame rate doesn't affect the
     // controls
     float currentFrame = glfwGetTime();
@@ -297,13 +260,19 @@ int main() {
 
     processInput(window);
 
-    glm::mat4 view = camera.GetViewMatrix();
+        camera.Yaw   += 180.0f; // rotate the camera's yaw 180 degrees around
+        camera.ProcessMouseMovement(0, 0, false); // call this to make sure it updates its camera vectors, note that we disable pitch constrains for this specific case (otherwise we can't reverse camera's pitch values)
+        glm::mat4 view = camera.GetViewMatrix();
+        camera.Yaw   -= 180.0f; // reset it back to its original orientation
+        camera.ProcessMouseMovement(0, 0, true); 
+
     glm::mat4 projection = glm::perspective(
         glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight,
         0.1f, 100.0f);
     glm::mat4 model = glm::mat4(1.0f);
 
-    // glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT |
             GL_DEPTH_BUFFER_BIT); // we're not using the stencil buffer now
     glEnable(GL_DEPTH_TEST);
@@ -313,6 +282,7 @@ int main() {
     lightingShader.setMat4("projection", projection);
 
     // FLOOR //
+
     glBindVertexArray(planeVAO);
     glBindTexture(GL_TEXTURE_2D, floorTexture);
 
@@ -320,7 +290,8 @@ int main() {
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     // CUBE 1 //
-    glEnable(GL_CULL_FACE);
+
+    glActiveTexture(GL_TEXTURE0);
 
     glBindVertexArray(cubeVAO);
     glBindTexture(GL_TEXTURE_2D, cubeTexture);
@@ -331,25 +302,54 @@ int main() {
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // CUBE 2 //
-    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glBindTexture(GL_TEXTURE_2D, cubeTexture);
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(2.0f, 1.0f, 0.0f));
     lightingShader.setMat4("model", model);
     glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
 
-    glDisable(GL_CULL_FACE);
-
-    /* second pass
     glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    screenQuadShader.Activate();
-    glBindVertexArray(screenQuadVAO);
+    lightingShader.Activate();
+
+     view = camera.GetViewMatrix();
+    lightingShader.setMat4("view", view);
+    lightingShader.setMat4("projection", projection);
+
+    // FLOOR //
+
+    glBindVertexArray(planeVAO);
+    glBindTexture(GL_TEXTURE_2D, floorTexture);
+
+    lightingShader.setMat4("model", glm::mat4(1.0f));
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // CUBE 1 //
+    glBindVertexArray(cubeVAO);
+    glBindTexture(GL_TEXTURE_2D, cubeTexture);
+
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(-1.0f, 1.0f, -1.0f));
+    lightingShader.setMat4("model", model);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // CUBE 2 //
+    glBindTexture(GL_TEXTURE_2D, cubeTexture);
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(2.0f, 1.0f, 0.0f));
+    lightingShader.setMat4("model", model);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+
     glDisable(GL_DEPTH_TEST);
+    screenQuadShader.Activate();
+    glBindVertexArray(quadVAO);
     glBindTexture(GL_TEXTURE_2D, colorTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
-    */
+
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
